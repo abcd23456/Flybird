@@ -143,11 +143,14 @@ def train(opt):
             evaluate_rewards.append(episode_return)
             print("evaluate_num:{} \t episode_return:{} \t".format(evaluate_num, episode_return))
             writer.add_scalar('step_rewards', evaluate_rewards[-1], global_step=iter)
-        if (iter+1) % 1000 == 0:
+        if (iter + 1) % 1000 == 0:
+            os.makedirs(opt.saved_path, exist_ok=True)
             actor_dict = {"net": actor.state_dict(), "optimizer": actor_optimizer.state_dict()}
             critic_dict = {"net": critic.state_dict(), "optimizer": critic_optimizer.state_dict()}
-            torch.save(actor_dict, "{}/flappy_bird_actor_good".format(opt.saved_path))
-            torch.save(critic_dict, "{}/flappy_bird_critic_good".format(opt.saved_path))
+            actor_path = os.path.join(opt.saved_path, f"flappy_bird_cpu_actor_{iter + 1}.pth")
+            critic_path = os.path.join(opt.saved_path, f"flappy_bird_cpu_critic_{iter + 1}.pth")
+            torch.save(actor_dict, actor_path)
+            torch.save(critic_dict, critic_path)
 
 if __name__ == "__main__":
     opt = get_args()

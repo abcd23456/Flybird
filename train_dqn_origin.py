@@ -16,9 +16,11 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 class DeepQNetwork(nn.Module):
     def __init__(self):
         super(DeepQNetwork, self).__init__()
+
         self.conv1 = nn.Sequential(nn.Conv2d(4, 32, kernel_size=8, stride=4), nn.ReLU(inplace=True))
         self.conv2 = nn.Sequential(nn.Conv2d(32, 64, kernel_size=4, stride=2), nn.ReLU(inplace=True))
         self.conv3 = nn.Sequential(nn.Conv2d(64, 64, kernel_size=3, stride=1), nn.ReLU(inplace=True))
+
         self.fc1 = nn.Sequential(nn.Linear(7 * 7 * 64, 512), nn.ReLU(inplace=True))
         self.fc2 = nn.Sequential(nn.Linear(512, 2))
 
@@ -31,7 +33,7 @@ class DeepQNetwork(nn.Module):
         return self.fc2(output)
 
 def get_args():
-    parser = argparse.ArgumentParser("Implementation of Deep Q Network to play Flappy Bird")
+    parser = argparse.ArgumentParser("""Implementation of Deep Q Network to play Flappy Bird""")
     parser.add_argument("--image_size", type=int, default=84)
     parser.add_argument("--batch_size", type=int, default=32)
     parser.add_argument("--optimizer", type=str, choices=["sgd", "adam"], default="adam")
@@ -51,16 +53,6 @@ def train(opt):
     model = DeepQNetwork().to(device)
     target_q_net = DeepQNetwork().to(device)
 
-    # 1. 加载固定模型（如果存在）
-    fixed_model_path = os.path.join(opt.saved_path, "flappy_bird_origin_dqn_10000.pth")
-    if os.path.exists(fixed_model_path):
-        model.load_state_dict(torch.load(fixed_model_path, map_location=device))
-        target_q_net.load_state_dict(model.state_dict())
-        print(f"Loaded pretrained model from {fixed_model_path}")
-    else:
-        print("No pretrained model found, starting training from scratch.")
-
-    # 原有的目录初始化和记录器
     if os.path.isdir(opt.log_path):
         shutil.rmtree(opt.log_path)
     os.makedirs(opt.log_path)
@@ -129,11 +121,11 @@ def train(opt):
         writer.add_scalar('Train/Q-value', torch.max(prediction).item(), iter)
 
         if (iter + 1) % 5000 == 0:
-            torch.save(model.state_dict(), f"{opt.saved_path}/flappy_bird_cpu_dqn_{iter+1}.pth")
+            torch.save(model.state_dict(), f"{opt.saved_path}/flappy_bird_origin_dqn_{iter+1}.pth")
 
         iter += 1
 
-    torch.save(model.state_dict(), f"{opt.saved_path}/flappy_bird_cpu_dqn_final.pth")
+    torch.save(model.state_dict(), f"{opt.saved_path}/flappy_bird_origin_dqn_final.pth")
 
 if __name__ == "__main__":
     opt = get_args()

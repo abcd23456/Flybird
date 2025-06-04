@@ -163,9 +163,10 @@ def train(opt):
             os.makedirs(opt.saved_path, exist_ok=True)
             actor_dict = {"net": actor.state_dict(), "optimizer": actor_optimizer.state_dict()}
             critic_dict = {"net": critic.state_dict(), "optimizer": critic_optimizer.state_dict()}
-            torch.save(actor_dict, os.path.join(opt.saved_path, "flappy_bird_actor"))
-            torch.save(critic_dict, os.path.join(opt.saved_path, "flappy_bird_critic"))
-            print(f"Model saved at iteration {iter + 1}")
+            actor_path = os.path.join(opt.saved_path, f"flappy_bird_origin_actor_{iter + 1}.pth")
+            critic_path = os.path.join(opt.saved_path, f"flappy_bird_origin_critic_{iter + 1}.pth")
+            torch.save(actor_dict, actor_path)
+            torch.save(critic_dict, critic_path)
 
 if __name__ == "__main__":
     opt = get_args()

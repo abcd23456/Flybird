@@ -147,10 +147,10 @@ def train(opt):
             os.makedirs(opt.saved_path, exist_ok=True)
             actor_dict = {"net": actor.state_dict(), "optimizer": actor_optimizer.state_dict()}
             critic_dict = {"net": critic.state_dict(), "optimizer": critic_optimizer.state_dict()}
-            actor_path = os.path.join(opt.saved_path, f"flappy_bird_cpu_actor_{iter + 1}.pth")
-            critic_path = os.path.join(opt.saved_path, f"flappy_bird_cpu_critic_{iter + 1}.pth")
-            torch.save(actor_dict, actor_path)
-            torch.save(critic_dict, critic_path)
+            actor_saved_path = os.path.join(opt.saved_path, f"flappy_bird_origin_actor_{iter + 1}")
+            critic_saved_path = os.path.join(opt.saved_path, f"flappy_bird_origin_critic_{iter + 1}")
+            torch.save(actor_dict, actor_saved_path)
+            torch.save(critic_dict, critic_saved_path)
 
 if __name__ == "__main__":
     opt = get_args()

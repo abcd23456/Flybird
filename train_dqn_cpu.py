@@ -129,11 +129,11 @@ def train(opt):
         writer.add_scalar('Train/Q-value', torch.max(prediction).item(), iter)
 
         if (iter + 1) % 5000 == 0:
-            torch.save(model.state_dict(), f"{opt.saved_path}/flappy_bird_cpu_dqn_{iter+1}.pth")
+            torch.save(model, f"{opt.saved_path}/flappy_bird_cpu_dqn_{iter+1}")
 
         iter += 1
 
-    torch.save(model.state_dict(), f"{opt.saved_path}/flappy_bird_cpu_dqn_final.pth")
+    torch.save(model, f"{opt.saved_path}/flappy_bird_cpu_dqn_final")
 
 if __name__ == "__main__":
     opt = get_args()
